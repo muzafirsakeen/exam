@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header Example</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;400;500&display=swap" rel="stylesheet">
+
+    <style>
+     html{
+      scroll-behavior: smooth;
+      font-family: 'Poppins', sans-serif;;
+     }
+        table {
+            border-collapse: collapse;
+            width: 70%;
+            border: none;
+            background-color: white ;
+            border-radius: 15px;
+         
+        }
+
+        th, td {
+            border: none;
+            padding: 8px;
+            text-align: left;
+            line-height: 2em;
+        }
+
+        body {
+            background-color: rgb(238, 245, 220);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #1cafab;
+            color: #050404;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;     
+            align-items: center;
+        }
+
+        .logo {
+            width: 70px;
+            height: auto;
+            margin-right: 10px;
+            background-color: #302626b0;
+            border-radius: 50%;
+            
+        }
+
+        .title {
+            font-size: 1.2em;
+            margin: 0;
+        }
+
+        .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin-right: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #050404;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline; text-underline-offset: 8px;
+            text-decoration-color: aliceblue;
+        }
+
+       .logout{
+            color:white;
+            background-color:rgb(2, 188, 105);
+            text-decoration: wavy;
+            padding: 10px;
+            border-radius: 30px;
+       }
+
+      
+
+      
+
+        .filter-label {
+            margin-right: 10px;
+        }
+        .order{
+            margin-left: 30px;
+        }
+        #orderTable td:nth-child(1) {
+    color: rgb(83, 79, 79); 
+}
+#orderTable td:nth-child(3) {
+    width: 120px;
+    padding-right: 150px; 
+}
+#orderTable td:nth-child(4) {
+width:150px;
+    margin-right: 250px; 
+}
+    </style>
+</head>
+<body>
+      <header>
+            <div style="display: flex;">
+            <img class="logo" src="./assets/images/logo.png" alt="Logo">
+            <span style="margin-left:0;margin-top: 25px; font-size: x-large;font-weight: bolder; color:whitesmoke;"><span style="font-style: italic; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">m</span>Pharma</span>
+      </div>
+            <ul class="nav-links">
+                <li><a href="#" style="text-decoration: underline; text-underline-offset: 8px;">Orders</a></li>
+                <li><a href="./products.html">Products</a></li>
+                <li><a href="./users.html">Users</a></li>
+            </ul>
+            <a href="./index.html" class="logout">Logout</a>
+        </header>
+        <h1 class="order">Orders</h1>
+        <h3 style="margin-left: 20px;">Filter</h3>
+        <div style="display: flex;">
+
+        <div class="filter-container" style="width: 15%; margin-left: 15px; line-height: 2.5em;">
+            <p style=" color: gray; font-size:larger; font-weight: 300;">Count :<span id="countLabel"></span></p>
+
+            <label class="filter-label"><input type="checkbox" class="status-filter" value="New"> New</label><br>
+            <label class="filter-label"><input type="checkbox" class="status-filter" value="Packed"> Packed</label><br>
+            <label class="filter-label"><input type="checkbox" class="status-filter" value="InTransit"> In Transit</label><br>
+            <label class="filter-label"><input type="checkbox" class="status-filter" value="Delivered"> Delivered</label><br>
+        </div>
+        <table id="orderTable" class="table">
+            <tr>
+                <th>ID</th>
+                <th>Customer</th>
+                <th>Date & Time</th>
+                <th>Amount</th>
+                <th>Status</th>
+            </tr>
+        </table>
+      </div>
+        <script>
+            const table = document.getElementById('orderTable');
+            const statusFilters = document.querySelectorAll('.status-filter');
+    
+            function createTableRow(order) {
+    const row = document.createElement('tr');
+
+    const keys = ['id', 'customerName', 'orderDate', 'orderTime', 'amount', 'orderStatus'];
+
+    const selectedKeys = ['id', 'customerName', 'orderDate', 'amount', 'orderStatus'];
+
+    selectedKeys.forEach(key => {
+        const cell = document.createElement('td');
+
+        if (key === 'orderDate') {
+            cell.textContent = order['orderDate'] + ' ' + order['orderTime'];
+        }else if(key === 'amount'){
+            cell.textContent = '₹' + ' ' + order[key];
+        }
+        
+        else {
+            cell.textContent = order[key];
+        }
+
+        row.appendChild(cell);
+    });
+
+    const statusCell = document.createElement('td');
+
+    
+
+    row.appendChild(statusCell);
+
+    return row;
+}
+    
+            function renderOrders(filteredOrders) {
+                table.innerHTML = '';
+                table.appendChild(createTableHeader());
+    
+                filteredOrders.forEach(order => {
+                    table.appendChild(createTableRow(order));
+                });
+            }
+    
+            function createTableHeader() {
+                const headerRow = document.createElement('tr');
+    
+                const selectedHeaders = ['Order ID', 'Customer', 'Date & Time', 'Amount', 'Order Status'];
+    
+                selectedHeaders.forEach(headerText => {
+                    const th = document.createElement('th');
+                    th.textContent = headerText;
+                    headerRow.appendChild(th);
+                });
+    
+                return headerRow;
+            }
+    
+            function filterOrdersByStatus() {
+                const selectedStatuses = Array.from(statusFilters)
+                    .filter(input => input.checked)
+                    .map(input => input.value);
+    
+                return selectedStatuses.length > 0
+                    ? orders.filter(order => selectedStatuses.includes(order.orderStatus))
+                    : orders;
+            }
+    
+            statusFilters.forEach(input => {
+                input.addEventListener('change', function () {
+                    const filteredOrders = filterOrdersByStatus();
+                    renderOrders(filteredOrders);
+                });
+            });
+    
+            fetch('https://5fc1a1c9cb4d020016fe6b07.mockapi.io/api/v1/orders')
+                .then(response => response.json())
+                .then(data => {
+                    window.orders = data;
+                    renderOrders(orders);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+
+                function renderOrders(filteredOrders) {
+        table.innerHTML = '';
+        table.appendChild(createTableHeader());
+
+        filteredOrders.forEach(order => {
+            table.appendChild(createTableRow(order));
+        });
+
+        document.getElementById('countLabel').textContent = ` ${filteredOrders.length}`;
+    }
+      </script>
+    </body>
+    </html>

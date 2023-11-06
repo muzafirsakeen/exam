@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header Example</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;400;500&display=swap" rel="stylesheet">
+
+    <style>
+     html{
+      scroll-behavior: smooth;
+      font-family: 'Poppins', sans-serif;;
+     }
+        table {
+            border-collapse: collapse;
+            width: 75%;
+            border: none;
+            background-color: white ;
+            border-radius: 15px;
+         
+        }
+
+        th, td {
+            border: none;
+            padding: 8px;
+            text-align: left;
+            line-height: 2em;
+        }
+
+        body {
+            background-color: rgb(238, 245, 220);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #1cafab;
+            color: #050404;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;     
+            align-items: center;
+        }
+
+        .logo {
+            width: 70px;
+            height: auto;
+            margin-right: 10px;
+            background-color: #302626b0;
+            border-radius: 50%;
+            
+        }
+
+        .title {
+            font-size: 1.2em;
+            margin: 0;
+        }
+
+        .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin-right: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #050404;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline; text-underline-offset: 8px;
+            text-decoration-color: aliceblue;
+        }
+
+       .logout{
+            color:white;
+            background-color:rgb(2, 188, 105);
+            text-decoration: wavy;
+            padding: 10px;
+            border-radius: 30px;
+       }
+
+       .low-stock {
+    background-color: #FFCCCC; /* Change background color for low stock items */
+}
+
+      
+
+        .filter-label {
+            margin-right: 10px;
+        }
+        .order{
+            margin-left: 40px;
+        }
+        #orderTable td:nth-child(1) {
+    color: rgb(83, 79, 79); 
+}
+#orderTable td:nth-child(3) {
+    width: 120px;
+    padding-right: 150px; 
+}
+#orderTable td:nth-child(4) {
+width:150px;
+    margin-right: 250px; 
+}
+    </style>
+</head>
+<body>
+      <header>
+            <div style="display: flex;">
+            <img class="logo" src="./assets/images/logo.png" alt="Logo">
+            <span style="margin-left:0;margin-top: 25px; font-size: x-large;font-weight: bolder; color:whitesmoke;"><span style="font-style: italic; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">m</span>Pharma</span>
+      </div>
+            <ul class="nav-links">
+                <li><a href="./home.html" >Orders</a></li>
+                <li><a href="#" style="text-decoration: underline; text-underline-offset: 8px;">Products</a></li>
+                <li><a href="./users.html">Users</a></li>
+            </ul>
+            <a href="./index.html" class="logout">Logout</a>
+        </header>
+        <h1 class="order">Medicine Inventory</h1>
+        <h3 style="margin-left: 40px;">Filter</h3>
+        <div style="display: flex;">
+            <div class="filter-container" style="margin-left: 40px; margin-right: 10px;line-height: 1.5em;">
+                <p id="countLabel">Count: <span id="countValue"></span></p>
+                <label class="filter-label"><input type="checkbox" class="expiry-filter" value="expired"> Expired</label><br>
+                <label class="filter-label"><input type="checkbox" class="prescription-filter" value="prescription"> Prescription Required</label><br>
+            </div>
+            <table id="medicineTable" class="table">
+                <tr>
+                    <th>ID</th>
+                    <th>Medicine Name</th>
+                    <th>Medicine Brand</th>
+                    <th>Expiry Date</th>
+                    <th>Unit Price</th>
+                    <th>Prescription Required</th>
+                    <th>Stock</th>
+                </tr>
+            </table>
+        </div>
+        
+        <script>
+           const table = document.getElementById('medicineTable');
+const expiryFilters = document.querySelectorAll('.expiry-filter');
+const prescriptionFilters = document.querySelectorAll('.prescription-filter');
+function createTableRow(medicine) {
+    const row = document.createElement('tr');
+
+    const keys = ['id', 'medicineName', 'medicineBrand', 'expiryDate', 'unitPrice', 'prescriptionRequired', 'stock'];
+
+    keys.forEach(key => {
+        const cell = document.createElement('td');
+
+        if (key === 'unitPrice') {
+            cell.textContent = '₹' + ' ' + medicine[key];
+        } else if (key === 'prescriptionRequired') {
+            cell.textContent = medicine[key] ? 'Yes' : 'No';
+        } else if (key === 'stock') {
+            cell.textContent = medicine[key];
+            if (medicine[key] < 100) {
+                row.classList.add('low-stock'); // Add a class for low stock items
+            }
+        } else {
+            cell.textContent = medicine[key];
+        }
+
+        row.appendChild(cell);
+    });
+
+    return row;
+}
+
+
+function renderMedicines(filteredMedicines) {
+    table.innerHTML = '';
+    table.appendChild(createTableHeader());
+
+    filteredMedicines.forEach(medicine => {
+        table.appendChild(createTableRow(medicine));
+    });
+
+    document.getElementById('countValue').textContent = filteredMedicines.length;
+}
+
+function createTableHeader() {
+    const headerRow = document.createElement('tr');
+
+    const selectedHeaders = ['ID', 'Medicine Name', 'Medicine Brand', 'Expiry Date', 'Unit Price', 'Prescription Required', 'Stock'];
+
+    selectedHeaders.forEach(headerText => {
+        const th = document.createElement('th');
+        th.textContent = headerText;
+        headerRow.appendChild(th);
+    });
+
+    return headerRow;
+}
+
+function filterMedicines() {
+    const expired = Array.from(expiryFilters).some(input => input.checked);
+    const prescriptionRequired = Array.from(prescriptionFilters).some(input => input.checked);
+
+    return medicines.filter(medicine => {
+        const expiryDate = new Date(medicine.expiryDate);
+        const currentDate = new Date();
+
+        const isExpired = expired ? expiryDate < currentDate : true;
+        const isPrescriptionRequired = prescriptionRequired ? medicine.prescriptionRequired : true;
+
+        return isExpired && isPrescriptionRequired;
+    });
+}
+
+expiryFilters.forEach(input => {
+    input.addEventListener('change', function () {
+        const filteredMedicines = filterMedicines();
+        renderMedicines(filteredMedicines);
+    });
+});
+
+prescriptionFilters.forEach(input => {
+    input.addEventListener('change', function () {
+        const filteredMedicines = filterMedicines();
+        renderMedicines(filteredMedicines);
+    });
+});
+
+// Fetch data from API
+fetch('https://5fc1a1c9cb4d020016fe6b07.mockapi.io/api/v1/products')
+    .then(response => response.json())
+    .then(data => {
+        window.medicines = data;
+        renderMedicines(medicines);
+    })
+    .catch(error => console.error('Error fetching data:', error));
+</script>
+        </body>
+        </html>
+        

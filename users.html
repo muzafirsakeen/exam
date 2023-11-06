@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mPharma</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;400;500&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+            font-family: 'Poppins', sans-serif;;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            border: none;
+            background-color: white ;
+            border-radius: 15px;
+        }
+        th, td {
+            border: none;
+            padding: 8px;
+            text-align: left;
+            line-height: 2em;
+        }
+        body {
+            background-color: rgb(238, 245, 220);
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #1cafab;
+            color: #050404;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;     
+            align-items: center;
+        }
+        .logo {
+            width: 70px;
+            height: auto;
+            margin-right: 10px;
+            background-color: #302626b0;
+            border-radius: 50%;
+        }
+        .title {
+            font-size: 1.2em;
+            margin: 0;
+        }
+        .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .nav-links li {
+            margin-right: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #050404;
+        }
+        .nav-links a:hover {
+            text-decoration: underline; 
+            text-underline-offset: 8px;
+            text-decoration-color: aliceblue;
+        }
+        .logout {
+            color:white;
+            background-color:rgb(2, 188, 105);
+            text-decoration: wavy;
+            padding: 10px;
+            border-radius: 30px;
+        }
+        .filter-label {
+            margin-right: 10px;
+        }
+        .order {
+            margin-left: 30px;
+        }
+        #orderTable td:nth-child(1) {
+            color: rgb(83, 79, 79); 
+        }
+        #orderTable td:nth-child(3) {
+            width: 120px;
+            padding-right: 150px; 
+        }
+        #orderTable td:nth-child(4) {
+            width:150px;
+            margin-right: 250px; 
+        }
+        table {
+            margin-top: 20px;
+            align-items: center;
+            align-content: center;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        img {
+            max-width: 50px;
+            max-height: 50px;
+        }
+        .search-container {
+            display: flex;
+            margin-top: 20px;
+            width: 600px;
+
+        }
+
+        .search-input {
+            width: 800px;
+            flex: 3;
+            padding: 8px;
+            border-radius: 5px;
+            margin-right: 20px;
+            border: none;
+            border-bottom: 1px solid black;
+
+            margin-left: 40px;
+        }
+
+        .reset-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1cafab;
+            color: white;
+            cursor: pointer;
+        }
+
+        .reset-button:hover {
+            background-color: #147c86;
+        }
+        .search-result {
+            display: table-row;
+            color: red !important;
+            background-color: lightyellow !important;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex;">
+            <img class="logo" src="./assets/images/logo.png" alt="Logo">
+            <span style="margin-left:0;margin-top: 25px; font-size: x-large;font-weight: bolder; color:whitesmoke;"><span style="font-style: italic; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">m</span>Pharma</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="./home.html" >Orders</a></li>
+            <li><a href="./products.html" >Products</a></li>
+            <li><a href="#" style="text-decoration: underline; text-underline-offset: 8px;">Users</a></li>
+        </ul>
+        <a href="./index.html" class="logout">Logout</a>
+    </header>
+    <h1 class="order">Users</h1>
+    <div class="search-container">
+        <div class="search-container">
+            <input type="text" class="search-input" onkeydown="if (event.key === 'Enter') handleSearch()" placeholder="Search...">
+            <button class="reset-button" onclick="resetSearch()">Clear</button>
+
+            
+        </div>
+    </div>
+</div>
+   
+    <table id="orderTable" align="center">
+        <tr>
+            <th>ID</th>
+            <th>Profile Picture</th>
+            <th>Full Name</th>
+            <th>Date of Birth</th>
+            <th>Gender</th>
+            <th>Current City</th>
+            <th>Current Country</th>
+        </tr>
+    </table>
+    <script>
+        function filterTableByName(name) {
+            const rows = document.querySelectorAll('#orderTable tbody tr');
+            name = name.toLowerCase();
+        
+            rows.forEach(row => {
+                const fullNameCell = row.querySelector('td:nth-child(3)');
+        
+                if (fullNameCell) {
+                    const fullName = fullNameCell.textContent.toLowerCase();
+        
+                    if (fullName.includes(name)) {
+                        row.classList.add('search-result');
+                        row.style.display = '';
+                    } else {
+                        row.classList.remove('search-result');
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        }
+    
+        function handleSearch() {
+            if (event.key === 'Enter') {
+                const searchInput = document.querySelector('.search-input');
+                const searchValue = searchInput.value.trim().toLowerCase();
+    
+                if (searchValue.length < 2) {
+                    alert('Please enter at least 2 characters');
+                    return;
+                }
+    
+                // Make a fetch request to the API
+                fetch(`https://5fc1a1c9cb4d020016fe6b07.mockapi.io/api/v1/users?fullName=${searchValue}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const table = document.getElementById('orderTable');
+                        const tbody = document.createElement('tbody');
+    
+                        data.forEach(user => {
+                            const row = document.createElement('tr');
+                            
+                            // Create and append cells
+                            const idCell = document.createElement('td');
+                            idCell.textContent = user.id;
+                            row.appendChild(idCell);
+    
+                            const profilePicCell = document.createElement('td');
+                            const profilePic = document.createElement('img');
+                            profilePic.src = user.profilePic;
+                            profilePicCell.appendChild(profilePic);
+                            row.appendChild(profilePicCell);
+    
+                            const fullNameCell = document.createElement('td');
+                            fullNameCell.textContent = user.fullName;
+                            row.appendChild(fullNameCell);
+    
+                            const dobCell = document.createElement('td');
+                            dobCell.textContent = user.dob;
+                            row.appendChild(dobCell);
+    
+                            const genderCell = document.createElement('td');
+                            genderCell.textContent = user.gender;
+                            row.appendChild(genderCell);
+    
+                            const currentCityCell = document.createElement('td');
+                            currentCityCell.textContent = user.currentCity;
+                            row.appendChild(currentCityCell);
+    
+                            const currentCountryCell = document.createElement('td');
+                            currentCountryCell.textContent = user.currentCountry;
+                            row.appendChild(currentCountryCell);
+    
+                            tbody.appendChild(row);
+                        });
+    
+                        // Replace the existing tbody with the updated data
+                        const oldTbody = table.querySelector('tbody');
+                        table.replaceChild(tbody, oldTbody);
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            }
+        }
+    
+        function resetSearch() {
+            const searchInput = document.querySelector('.search-input');
+            searchInput.value = '';
+    
+            const rows = document.querySelectorAll('#orderTable tbody tr');
+            rows.forEach(row => {
+                row.style.display = '';
+                row.classList.remove('search-result');
+            });
+        }
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.querySelector('.search-input');
+            searchInput.addEventListener('keydown', function(event) {
+                if (event.key === "Enter") {
+                    handleSearch();
+                }
+            });
+    
+            const table = document.getElementById('orderTable');
+    
+            fetch('https://5fc1a1c9cb4d020016fe6b07.mockapi.io/api/v1/users')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.createElement('tbody');
+                    data.forEach(user => {
+                        const row = document.createElement('tr');
+    
+                        const idCell = document.createElement('td');
+                        idCell.textContent = user.id;
+                        row.appendChild(idCell);
+    
+                        const profilePicCell = document.createElement('td');
+                        const profilePic = document.createElement('img');
+                        profilePic.src = user.profilePic;
+                        profilePicCell.appendChild(profilePic);
+                        row.appendChild(profilePicCell);
+    
+                        const fullNameCell = document.createElement('td');
+                        fullNameCell.textContent = user.fullName;
+                        row.appendChild(fullNameCell);
+    
+                        const dobCell = document.createElement('td');
+                        dobCell.textContent = user.dob;
+                        row.appendChild(dobCell);
+    
+                        const genderCell = document.createElement('td');
+                        genderCell.textContent = user.gender;
+                        row.appendChild(genderCell);
+    
+                        const currentCityCell = document.createElement('td');
+                        currentCityCell.textContent = user.currentCity;
+                        row.appendChild(currentCityCell);
+    
+                        const currentCountryCell = document.createElement('td');
+                        currentCountryCell.textContent = user.currentCountry;
+                        row.appendChild(currentCountryCell);
+    
+                        tbody.appendChild(row);
+                    });
+    
+                    table.appendChild(tbody);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+
+       
+    </script>
+    
+</body>
+</html>
